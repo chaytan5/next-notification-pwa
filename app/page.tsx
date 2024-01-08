@@ -7,24 +7,6 @@ const DynamicNotification = dynamic(() => import("@/components/Notification"), {
 	loading: () => <p>Loading...</p>,
 });
 
-// import { useState } from "react";
-
-// async function notifyUser(
-// 	notificationText = "Thanks for enabling notifications!"
-// ) {
-// 	if (!("Notification" in window)) {
-// 		alert("Browser does not support notifications.");
-// 	} else if (window.Notification.permission === "granted") {
-// 		const notification = new Notification(notificationText);
-// 	} else if (window.Notification.permission !== "denied") {
-// 		await window.Notification.requestPermission().then((permission) => {
-// 			if (permission === "granted") {
-// 				const notification = new Notification(notificationText);
-// 			}
-// 		});
-// 	}
-// }
-
 export default function Home() {
 	return (
 		<main>
