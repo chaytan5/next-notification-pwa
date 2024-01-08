@@ -1,10 +1,10 @@
-"use client";
 import dynamic from "next/dynamic";
 
 import Notification from "@/components/Notification";
 
 const DynamicNotification = dynamic(() => import("@/components/Notification"), {
 	ssr: false,
+	loading: () => <p>Loading...</p>,
 });
 
 // import { useState } from "react";

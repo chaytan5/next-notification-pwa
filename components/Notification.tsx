@@ -4,16 +4,20 @@ import React, { useState } from "react";
 async function notifyUser(
 	notificationText = "Thanks for enabling notifications!"
 ) {
-	if (!("Notification" in window)) {
-		alert("Browser does not support notifications.");
-	} else if (window.Notification.permission === "granted") {
-		const notification = new window.Notification(notificationText);
-	} else if (window.Notification.permission !== "denied") {
-		await window.Notification.requestPermission().then((permission) => {
-			if (permission === "granted") {
-				const notification = new window.Notification(notificationText);
-			}
-		});
+	if (typeof window !== undefined) {
+		if (!("Notification" in window)) {
+			alert("Browser does not support notifications.");
+		} else if (window.Notification.permission === "granted") {
+			const notification = new window.Notification(notificationText);
+		} else if (window.Notification.permission !== "denied") {
+			await window.Notification.requestPermission().then((permission) => {
+				if (permission === "granted") {
+					const notification = new window.Notification(notificationText);
+				}
+			});
+		}
+	} else {
+		alert("Issue with client render");
 	}
 }
 
@@ -29,7 +33,9 @@ const Notification = () => {
 		setUserResponded(true);
 	}
 
-	return !(window.Notification.permission === "granted") && !userResponded ? (
+	return typeof window !== undefined &&
+		!(window.Notification.permission === "granted") &&
+		!userResponded ? (
 		<div className="px-8 py-4 w-fit mx-auto space-y-4">
 			<div className="text-xl">Would you like to enable notifications?</div>
 
