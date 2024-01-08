@@ -1,3 +1,4 @@
+"use client";
 import dynamic from "next/dynamic";
 
 import Notification from "@/components/Notification";
@@ -25,5 +26,9 @@ const DynamicNotification = dynamic(() => import("@/components/Notification"), {
 // }
 
 export default function Home() {
-	return <DynamicNotification />;
+	return (
+		<main>
+			<DynamicNotification />
+		</main>
+	);
 }
