@@ -1,29 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-async function notifyUser(
-	notificationText = "Thanks for enabling notifications!"
-) {
-	if (typeof window !== undefined) {
-		if (!("Notification" in window)) {
-			alert("Browser does not support notifications.");
-		} else if (window.Notification.permission === "granted") {
-			const notification = new window.Notification(notificationText);
-		} else if (window.Notification.permission !== "denied") {
-			await window.Notification.requestPermission().then((permission) => {
-				if (permission === "granted") {
-					const notification = new window.Notification(notificationText);
-				}
-			});
-		}
-	} else {
-		alert("Issue with client render");
-	}
-}
-
 const Notification = () => {
 	const [userResponded, setUserResponded] = useState(false);
 	const [_window, setWindow] = useState<Window | null>(null);
+
+	async function notifyUser(
+		notificationText = "Thanks for enabling notifications!"
+	) {
+		if (typeof window !== undefined) {
+			if (!("Notification" in window)) {
+				alert("Browser does not support notifications.");
+			} else if (window.Notification.permission === "granted") {
+				const notification = new window.Notification(notificationText);
+			} else if (window.Notification.permission !== "denied") {
+				await window.Notification.requestPermission().then((permission) => {
+					if (permission === "granted") {
+						const notification = new window.Notification(notificationText);
+					}
+				});
+			}
+		} else {
+			alert("Issue with client render");
+		}
+	}
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
