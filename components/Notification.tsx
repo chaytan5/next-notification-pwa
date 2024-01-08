@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 async function notifyUser(
 	notificationText = "Thanks for enabling notifications!"
@@ -23,6 +23,13 @@ async function notifyUser(
 
 const Notification = () => {
 	const [userResponded, setUserResponded] = useState(false);
+	const [_window, setWindow] = useState<Window | null>(null);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setWindow(window);
+		}
+	}, []);
 
 	async function enableNotifs() {
 		await notifyUser();
@@ -34,7 +41,7 @@ const Notification = () => {
 	}
 
 	return typeof window !== undefined &&
-		!(window.Notification.permission === "granted") &&
+		!(window?.Notification?.permission === "granted") &&
 		!userResponded ? (
 		<div className="px-8 py-4 w-fit mx-auto space-y-4">
 			<div className="text-xl">Would you like to enable notifications?</div>
