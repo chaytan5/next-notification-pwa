@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 
 const Notification2 = () => {
-	const [reg, setReg] = useState<ServiceWorkerRegistration | null>(null);
+	const [reg, setReg] = useState<ServiceWorkerRegistration | null>();
+	const [notifPerimission, setNotifPermission] = useState<
+		"granted" | "denied" | "default" | null
+	>("default");
 	function checkPermission() {
 		if (!("serviceWorker" in navigator)) {
 			throw new Error("No support for service worker");
@@ -29,8 +32,11 @@ const Notification2 = () => {
 	async function requestPermission() {
 		const permission = await Notification.requestPermission();
 
+		setNotifPermission(permission);
 		if (permission !== "granted") {
 			throw new Error("Notification permission not granted");
+		} else {
+			reg?.showNotification("Notifications have been enabled");
 		}
 	}
 
@@ -66,19 +72,29 @@ const Notification2 = () => {
 	useEffect(() => {
 		checkPermission();
 		registerSW();
-		requestPermission();
 	}, []);
+
+	console.log(notifPerimission);
 
 	console.log(reg);
 
 	return (
 		<div className="grid place-items-center h-dvh">
-			<button
-				className="bg-gray-300 px-4 py-2 rounded hover:opacity-80 transition"
-				onClick={() => reg?.showNotification("Hello World")}
-			>
-				Send Notification
-			</button>
+			{notifPerimission === "default" || notifPerimission === "denied" ? (
+				<button
+					className="bg-gray-300 px-4 py-2 rounded hover:opacity-80 transition"
+					onClick={() => requestPermission()}
+				>
+					Allow Notifications
+				</button>
+			) : (
+				<button
+					className="bg-gray-300 px-4 py-2 rounded hover:opacity-80 transition"
+					onClick={() => reg?.showNotification("Hello World")}
+				>
+					Send Notification
+				</button>
+			)}
 		</div>
 	);
 };
