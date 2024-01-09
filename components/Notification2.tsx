@@ -15,9 +15,13 @@ const Notification2 = () => {
 	}
 
 	async function registerSW() {
-		const registration = await navigator.serviceWorker.register("sw.js");
-		setReg(registration);
-		return registration;
+		// const registration = await navigator.serviceWorker.register("sw.js");
+		// setReg(registration);
+		// return registration;
+
+		const registration = await navigator.serviceWorker.getRegistration();
+		setReg(registration ?? null);
+		return;
 	}
 
 	async function requestPermission() {
@@ -28,11 +32,42 @@ const Notification2 = () => {
 		}
 	}
 
+	// const sendNotification = async () => {
+	// 	if (Notification.permission === "granted") {
+	// 		showNotification(notification.value);
+	// 	} else {
+	// 		if (Notification.permission !== "denied") {
+	// 			const permission = await Notification.requestPermission();
+
+	// 			if (permission === "granted") {
+	// 				showNotification(notification.value);
+	// 			}
+	// 		}
+	// 	}
+	// };
+
+	// const showNotification = body => {
+	//   const title = 'What PWA Can Do Today';
+
+	//   const payload = {
+	//     body
+	//   };
+
+	//   if ('showNotification' in reg) {
+	//     reg.showNotification(title, payload);
+	//   }
+	//   else {
+	//     new Notification(title, payload);
+	//   }
+	// }
+
 	useEffect(() => {
 		checkPermission();
 		registerSW();
 		requestPermission();
 	}, []);
+
+	console.log(reg);
 
 	return (
 		<div className="grid place-items-center h-dvh">
