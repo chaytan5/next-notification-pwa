@@ -8,20 +8,23 @@ const Notification = () => {
 	async function notifyUser(
 		notificationText = "Thanks for enabling notifications!"
 	) {
-		if (typeof window !== undefined) {
-			if (!("Notification" in window)) {
-				alert("Browser does not support notifications.");
-			} else if (window.Notification.permission === "granted") {
-				const notification = new window.Notification(notificationText);
-			} else if (window.Notification.permission !== "denied") {
-				await window.Notification.requestPermission().then((permission) => {
-					if (permission === "granted") {
-						const notification = new window.Notification(notificationText);
-					}
-				});
+		try {
+			if (typeof window !== undefined) {
+				if (window.Notification.permission === "granted") {
+					new window.Notification(notificationText);
+					console.log(window.Notification.permission);
+				} else if (window.Notification.permission !== "denied") {
+					await window.Notification.requestPermission().then((permission) => {
+						if (permission === "granted") {
+							const notification = new window.Notification(notificationText);
+						}
+					});
+				}
+			} else {
+				alert("Issue with client render");
 			}
-		} else {
-			alert("Issue with client render");
+		} catch (error: any) {
+			throw new Error(error.message);
 		}
 	}
 
