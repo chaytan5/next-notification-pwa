@@ -1,81 +1,66 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
-const Notification = () => {
-	const [userResponded, setUserResponded] = useState(false);
-	const [_window, setWindow] = useState<Window | null>(null);
+import { useEffect, useState } from "react";
 
-	async function notifyUser(
-		notificationText = "Thanks for enabling notifications!"
-	) {
-		try {
-			if (typeof window !== undefined) {
-				if (window.Notification.permission === "granted") {
-					new window.Notification(notificationText);
-					console.log(window.Notification.permission);
-				} else if (window.Notification.permission !== "denied") {
-					await window.Notification.requestPermission().then((permission) => {
-						if (permission === "granted") {
-							const notification = new window.Notification(notificationText);
-						}
-					});
-				}
-			} else {
-				alert("Issue with client render");
-			}
-		} catch (error: any) {
-			throw new Error(error.message);
+const Notification2 = () => {
+	const [reg, setReg] = useState<ServiceWorkerRegistration | null>();
+	const [notifPerimission, setNotifPermission] = useState<
+		"granted" | "denied" | "default" | null
+	>("default");
+
+	function checkPermission() {
+		if (!("serviceWorker" in navigator)) {
+			throw new Error("No support for service worker");
+		}
+
+		if (!("Notification" in window)) {
+			throw new Error("No support for Notification API in your device");
+		}
+	}
+
+	async function registerSW() {
+		const registration = await navigator.serviceWorker.register(
+			"service-worker.js"
+		);
+		setReg(registration);
+		return registration;
+	}
+
+	async function requestPermission() {
+		const permission = await Notification.requestPermission();
+
+		setNotifPermission(permission);
+		if (permission !== "granted") {
+			throw new Error("Notification permission not granted");
+		} else {
+			reg?.showNotification("Notifications have been enabled");
 		}
 	}
 
 	useEffect(() => {
-		if (typeof window !== "undefined") {
-			setWindow(window);
-		}
+		checkPermission();
+		registerSW();
 	}, []);
 
-	async function enableNotifs() {
-		await notifyUser();
-		setUserResponded(true);
-	}
-
-	function disableNotifs() {
-		setUserResponded(true);
-	}
-
-	return typeof window !== undefined &&
-		!(window?.Notification?.permission === "granted") &&
-		!userResponded ? (
-		<div className="px-8 py-4 w-fit mx-auto space-y-4">
-			<div className="text-xl">Would you like to enable notifications?</div>
-
-			<div className="flex gap-4 justify-center">
+	return (
+		<div className="grid place-items-center h-dvh">
+			{notifPerimission === "default" || notifPerimission === "denied" ? (
 				<button
-					className="px-4 py-2 rounded border border-slate-50 bg-green-200"
-					onClick={() => enableNotifs()}
+					className="bg-gray-300 px-4 py-2 rounded hover:opacity-80 transition"
+					onClick={() => requestPermission()}
 				>
-					Sure!
+					Allow Notifications
 				</button>
+			) : (
 				<button
-					className="px-4 py-2 border border-slate-50 bg-red-200 rounded"
-					onClick={() => disableNotifs()}
+					className="bg-gray-300 px-4 py-2 rounded hover:opacity-80 transition"
+					onClick={() => reg?.showNotification("Hello World")}
 				>
-					Nope
+					Send Notification
 				</button>
-			</div>
+			)}
 		</div>
-	) : window.Notification.permission === "granted" ? (
-		<div className="w-full h-dvh grid place-items-center">
-			<button
-				className="px-8 py-2 bg-gray-200 rounded transition hover:bg-gray-300"
-				onClick={() => notifyUser("This is a sample notification")}
-			>
-				Send Notification
-			</button>
-		</div>
-	) : (
-		<h1>Notifications disabled</h1>
 	);
 };
 
-export default Notification;
+export default Notification2;
