@@ -15,13 +15,15 @@ const Notification2 = () => {
 	}
 
 	async function registerSW() {
-		// const registration = await navigator.serviceWorker.register("sw.js");
-		// setReg(registration);
-		// return registration;
+		const registration = await navigator.serviceWorker.register(
+			"service-worker.js"
+		);
+		setReg(registration);
+		return registration;
 
-		const registration = await navigator.serviceWorker.getRegistration();
-		setReg(registration ?? null);
-		return;
+		// const registration = await navigator.serviceWorker.getRegistration();
+		// setReg(registration ?? null);
+		// return;
 	}
 
 	async function requestPermission() {
