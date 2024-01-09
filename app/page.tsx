@@ -7,10 +7,18 @@ const DynamicNotification = dynamic(() => import("@/components/Notification"), {
 	loading: () => <p>Loading...</p>,
 });
 
+const DynamicNotification2 = dynamic(
+	() => import("@/components/Notification2"),
+	{
+		ssr: false,
+		loading: () => <p>Loading...</p>,
+	}
+);
+
 export default function Home() {
 	return (
 		<main>
-			<DynamicNotification />
+			<DynamicNotification2 />
 		</main>
 	);
 }
