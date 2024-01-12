@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import webPush from "web-push";
 import * as fs from "node:fs";
+import { connect } from "@/dbConfig/dbConfig";
+import Subscription from "@/models/subscription.model";
+
+connect();
 
 webPush.setVapidDetails(
 	"mailto:hey@example.com",
@@ -8,21 +12,31 @@ webPush.setVapidDetails(
 	process.env.PRIVATE_KEY!
 );
 
-const filePath = "subscriptions.json";
-const rawData = fs.readFileSync(filePath, "utf-8");
-const subscriptions = JSON.parse(rawData);
+// const filePath = "subscriptions.json";
+// const rawData = fs.readFileSync(filePath, "utf-8");
+// const subscriptions = JSON.parse(rawData);
 
 export async function POST(request: NextRequest) {
 	try {
 		const { subscription, id } = await request.json();
 
 		console.log(subscription);
-		subscriptions[id] = subscription;
 
-		const updatedData = JSON.stringify(subscriptions, null, 2);
+		const subscriptionFromDb = await Subscription.findOne({ id });
 
-		// Write the updated content back to the file
-		fs.writeFileSync(filePath, updatedData);
+		if (subscriptionFromDb) {
+			return NextResponse.json({
+				message: "Subscription already present",
+				status: "Success",
+			});
+		}
+
+		const newSubscription = new Subscription({
+			...subscription,
+			id,
+		});
+
+		await newSubscription.save();
 
 		return NextResponse.json({
 			message: "Saved successfully",

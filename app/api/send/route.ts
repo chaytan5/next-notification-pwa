@@ -15,10 +15,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import webPush from "web-push";
 import * as fs from "node:fs";
+import { connect } from "@/dbConfig/dbConfig";
+import Subscription from "@/models/subscription.model";
 
-const filePath = "subscriptions.json";
-const rawData = fs.readFileSync(filePath, "utf-8");
-const subscriptions = JSON.parse(rawData);
+// const filePath = "subscriptions.json";
+// const rawData = fs.readFileSync(filePath, "utf-8");
+// const subscriptions = JSON.parse(rawData);
+
+connect();
 
 webPush.setVapidDetails(
 	"mailto:hey@example.com",
@@ -26,10 +30,19 @@ webPush.setVapidDetails(
 	process.env.PRIVATE_KEY!
 );
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
 	try {
 		const { message, title, id } = await request.json();
-		const subscription = subscriptions[id];
+
+		const subscription = await Subscription.findOne({ id });
+
+		if (!subscription) {
+			return NextResponse.json({
+				message: "Subscribe to notifications first",
+				status: "Error",
+			});
+		}
+
 		const payload = JSON.stringify({ title, message });
 
 		webPush
