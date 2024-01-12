@@ -5,8 +5,7 @@ import { useSubscribe } from "react-pwa-push-notifications";
 import toast, { Toaster } from "react-hot-toast";
 // import TextInput from "./components/Input";
 import axios from "axios";
-// import Links from "./components/Links";
-// import { QRCode, QRSvg } from "sexy-qr";
+import { uuid } from "uuidv4";
 
 // in PROD use from .env
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY;
@@ -84,12 +83,16 @@ function App() {
 	);
 
 	useEffect(() => {
-		FingerprintJS.load()
-			.then((fp) => fp.get())
-			.then((result) => {
-				setSubscribeId(result.visitorId);
-				setPushId(result.visitorId);
-			});
+		// FingerprintJS.load()
+		// 	.then((fp) => fp.get())
+		// 	.then((result) => {
+		// 		setSubscribeId(result.visitorId);
+		// 		setPushId(result.visitorId);
+		// 	});
+
+		const id = uuid();
+		setSubscribeId(id);
+		setPushId(id);
 	}, []);
 
 	return (
