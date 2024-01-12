@@ -9,7 +9,7 @@ import axios from "axios";
 // import { QRCode, QRSvg } from "sexy-qr";
 
 // in PROD use from .env
-const PUBLIC_KEY = process.env.PUBLIC_KEY;
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY;
 
 function App() {
 	const [loadingSubscribe, setLoadingSubscribe] = useState<boolean>(false);
@@ -27,26 +27,8 @@ function App() {
 		setShowSubscribe(false);
 	};
 
-	// const qrCode = useMemo(() => {
-	// 	const qr = new QRCode({
-	// 		content: window.location.href,
-	// 		ecl: "M",
-	// 	});
-	// 	return new QRSvg(qr, {
-	// 		fill: "#182026",
-	// 		cornerBlocksAsCircles: true,
-	// 		size: 200,
-	// 		radiusFactor: 0.75,
-	// 		cornerBlockRadiusFactor: 2,
-	// 		roundOuterCorners: true,
-	// 		roundInnerCorners: true,
-	// 	}).svg;
-	// }, []);
-
-	console.log(PUBLIC_KEY);
 	const { getSubscription } = useSubscribe({
-		publicKey:
-			"BEY8-HDPGU44GHHbF95zfqovsjwJrTD4g9G-X85Vvj25BqknU2wEyzoxsNoKc09u0a9aaLf5-C5y_NHrVI9Ytec",
+		publicKey: PUBLIC_KEY,
 	});
 
 	const onSubmitSubscribe = useCallback(
@@ -58,7 +40,6 @@ function App() {
 			try {
 				console.log("1");
 				const subscription = await getSubscription();
-				// console.log(Errors);
 				console.log(subscription);
 				await axios.post("/api/subscribe", {
 					subscription: subscription,
@@ -114,33 +95,39 @@ function App() {
 	}, []);
 
 	return (
-		<div>
-			<main className="space-y-10">
+		<div className="">
+			<div className="space-y-10 p-6 max-w-screen-sm mx-auto">
 				<div>
-					<div className="message">
-						<div className="title"> Use as PWA</div>
-						<div>
+					<div className="space-y-4">
+						<div className="text-3xl text-slate-800 font-semibold text-center">
+							NextJS PWA
+						</div>
+						<p className="text-xl text-center text-balance">
 							You need to install the site on your home screen. Subscribe to
 							push notifications. Then you can test sending notifications.
-						</div>
+						</p>
 					</div>
 					{/* <div
 						className={"qrCode"}
 						dangerouslySetInnerHTML={{ __html: qrCode }}
 					/> */}
 				</div>
-				<div className="tabs">
-					<div className={`tab-item`}>
+				<div className="grid grid-cols-2 gap-4 place-items-center">
+					<div className="">
 						<button
-							className={`tab ${showSubscribe ? "active" : ""}`}
+							className={`rounded px-4 py-2 border border-slate-400 ${
+								showSubscribe ? "bg-slate-300" : "bg-white"
+							}`}
 							onClick={onShowSubscribe}
 						>
 							Subscribe
 						</button>
 					</div>
-					<div className={`tab-item`}>
+					<div>
 						<button
-							className={`tab ${!showSubscribe ? "active" : ""}`}
+							className={`rounded px-4 py-2 border border-slate-400 ${
+								!showSubscribe ? "bg-slate-300" : "bg-white"
+							}`}
 							onClick={onShowPush}
 						>
 							Push
@@ -148,29 +135,32 @@ function App() {
 					</div>
 				</div>
 				{!showSubscribe && (
-					<div className="send">
-						<form onSubmit={onSubmitPush}>
-							<div className="title">Notification</div>
+					<div className="">
+						<form className="grid grid-cols-1 gap-6" onSubmit={onSubmitPush}>
+							<div className="text-lg text-center">Notification</div>
 							<input
+								className="border border-slate-500 py-2 px-4 rounded"
 								id="idSubscribe"
 								placeholder="id"
 								value={pushId}
 								onChange={onChange(setPushId)}
 							/>
 							<input
+								className="border border-slate-500 py-2 px-4 rounded"
 								id="title"
 								placeholder="title"
 								value={title}
 								onChange={onChange(setTitle)}
 							/>
 							<input
+								className="border border-slate-500 py-2 px-4 rounded"
 								id="message"
 								placeholder="message"
 								value={message}
 								onChange={onChange(setMessage)}
 							/>
 							<button
-								className="px4 py-2 bg-indigo-500 text-white"
+								className="px-4 py-2 bg-slate-700 text-white rounded hover:opacity-80 transition"
 								type="submit"
 							>
 								{loadingPush ? "loading" : "Send"}
@@ -179,27 +169,34 @@ function App() {
 					</div>
 				)}
 				{showSubscribe && (
-					<div className="outline outline-lime-500">
+					<div className="">
 						<form
 							className="grid grid-cols-1 gap-4 place-items-center"
 							onSubmit={onSubmitSubscribe}
 						>
-							<div className="">Your Id</div>
-							<input
-								className="border border-red-400 w-fit px-4 py-2"
-								id="fingerprint"
-								placeholder="Your id"
-								value={subscribeId}
-								onChange={onChange(setSubscribeId)}
-							/>
-							<button className="" type="submit">
+							<div className="w-full flex gap-2 items-center">
+								<label htmlFor="fingerprint" className="text-lg">
+									Your ID:
+								</label>
+								<input
+									className="flex-grow px-4 py-2 border border-slate-500 rounded"
+									id="fingerprint"
+									placeholder="Your id"
+									value={subscribeId}
+									onChange={onChange(setSubscribeId)}
+								/>
+							</div>
+							<button
+								className="px-4 py-2 bg-slate-700 text-white rounded hover:opacity-80 transition"
+								type="submit"
+							>
 								{loadingSubscribe ? "loading" : "Send"}
 							</button>
 						</form>
 					</div>
 				)}
 				<div>{/* <Links /> */}</div>
-			</main>
+			</div>
 			<Toaster />
 		</div>
 	);

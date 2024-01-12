@@ -10,6 +10,8 @@
 	},
 	"dependencies": {
 		"@fingerprintjs/fingerprintjs": "^4.1.0",
+		"@serwist/next": "^8.4.2",
+		"@serwist/sw": "^8.4.2",
 		"axios": "^1.5.0",
 		"mongoose": "^8.0.4",
 		"next": "14.0.4",
@@ -21,6 +23,7 @@
 		"web-push": "^3.6.6"
 	},
 	"devDependencies": {
+		"@serwist/precaching": "^8.4.2",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",

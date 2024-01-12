@@ -31,6 +31,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 		const { message, title, id } = await request.json();
 		const subscription = subscriptions[id];
 		const payload = JSON.stringify({ title, message });
+
 		webPush
 			.sendNotification(subscription, payload)
 			.catch((error) => {
@@ -38,7 +39,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
 			})
 			.then((value) => {
 				return NextResponse.json({ data: { success: true } });
-			});
+			})
+			.finally(() => NextResponse.json({ data: { success: true } }));
+
+		return NextResponse.json({
+			message: "Notif sent successfully",
+			status: "Success",
+		});
 	} catch (error) {
 		console.log(error);
 	}
