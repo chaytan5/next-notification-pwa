@@ -15,6 +15,8 @@ const subscriptions = JSON.parse(rawData);
 export async function POST(request: NextRequest) {
 	try {
 		const { subscription, id } = await request.json();
+
+		console.log(subscription);
 		subscriptions[id] = subscription;
 
 		const updatedData = JSON.stringify(subscriptions, null, 2);

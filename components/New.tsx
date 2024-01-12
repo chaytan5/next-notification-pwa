@@ -52,7 +52,8 @@ function App() {
 				setLoadingSubscribe(false);
 			}
 		},
-		[getSubscription, subscribeId]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[getSubscription]
 	);
 
 	const onSubmitPush = useCallback(
@@ -188,7 +189,7 @@ function App() {
 								className="px-4 py-2 bg-slate-700 text-white rounded hover:opacity-80 transition"
 								type="submit"
 							>
-								{loadingSubscribe ? "loading" : "Send"}
+								{loadingSubscribe ? "loading" : "Subscribe"}
 							</button>
 						</form>
 					</div>
