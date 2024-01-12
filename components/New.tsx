@@ -35,10 +35,8 @@ function App() {
 		async (e: React.FormEvent) => {
 			e.preventDefault();
 			setLoadingSubscribe(true);
-			console.log("here");
 
 			try {
-				console.log("1");
 				const subscription = await getSubscription();
 				console.log(subscription);
 				await axios.post("/api/subscribe", {
