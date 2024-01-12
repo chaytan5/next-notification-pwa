@@ -44,10 +44,9 @@ function App() {
 					id: subscribeId,
 				});
 				toast.success("Subscribe success");
-			} catch (e) {
+			} catch (e: any) {
 				console.warn(e);
-				toast.error("Details console");
-				console.log(e);
+				toast(e.errorCode);
 			} finally {
 				setLoadingSubscribe(false);
 			}
