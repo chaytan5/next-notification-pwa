@@ -1,27 +1,10 @@
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
-import * as fs from "node:fs";
-
-// Function to read the array from a file
-const readArrayFromFile = (filePath: any) => {
-	try {
-		const data = fs.readFileSync(filePath, "utf8");
-		return JSON.parse(data);
-	} catch (error) {
-		// If the file doesn't exist or is empty, return an empty array
-		return [];
-	}
-};
+import { readArrayFromFile, writeArrayToFile } from "../helpers/utils";
 
 const filePath = "data.json";
 let dataArray = readArrayFromFile(filePath);
-
-// Function to write the array to a file
-const writeArrayToFile = (filePath: any, dataArray: any) => {
-	const data = JSON.stringify(dataArray, null, 2);
-	fs.writeFileSync(filePath, data, "utf8");
-};
 
 // connect();
 
