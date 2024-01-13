@@ -101,7 +101,7 @@ function App() {
 				<div>
 					<div className="space-y-4">
 						<div className="text-3xl text-slate-800 font-semibold text-center">
-							NextJS PWA
+							New Heading!
 						</div>
 						<p className="text-xl text-center text-balance">
 							You need to install the site on your home screen. Subscribe to
