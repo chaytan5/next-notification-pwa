@@ -12,6 +12,7 @@
 		"@fingerprintjs/fingerprintjs": "^4.1.0",
 		"@serwist/next": "^8.4.2",
 		"@serwist/sw": "^8.4.2",
+		"@uidotdev/usehooks": "^2.4.1",
 		"axios": "^1.5.0",
 		"mongoose": "^8.0.4",
 		"next": "14.0.4",

@@ -6,21 +6,9 @@ import Subscription from "@/models/subscription.model";
 
 connect();
 
-webPush.setVapidDetails(
-	"mailto:hey@example.com",
-	process.env.PUBLIC_KEY!,
-	process.env.PRIVATE_KEY!
-);
-
-// const filePath = "subscriptions.json";
-// const rawData = fs.readFileSync(filePath, "utf-8");
-// const subscriptions = JSON.parse(rawData);
-
 export async function POST(request: NextRequest) {
 	try {
 		const { subscription, id } = await request.json();
-
-		console.log(subscription);
 
 		const subscriptionFromDb = await Subscription.findOne({ id });
 

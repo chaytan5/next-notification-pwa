@@ -6,6 +6,8 @@ import toast, { Toaster } from "react-hot-toast";
 // import TextInput from "./components/Input";
 import axios from "axios";
 import { uuid } from "uuidv4";
+// import useLocalStorage from "@/hooks/useLocalStorage";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 // in PROD use from .env
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY;
@@ -13,11 +15,14 @@ const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY;
 function App() {
 	const [loadingSubscribe, setLoadingSubscribe] = useState<boolean>(false);
 	const [loadingPush, setLoadingPush] = useState<boolean>(false);
-	const [pushId, setPushId] = useState<string>("");
+	const [pushId, setPushId] = useLocalStorage<string>("pushId", "");
 	const [message, setMessage] = useState<string>("World");
 	const [title, setTitle] = useState<string>("Hello");
-	const [subscribeId, setSubscribeId] = useState<string>("");
+	const [subscribeId, setSubscribeId] = useLocalStorage("subscribeId", "");
 	const [showSubscribe, setShowSubscribe] = useState<boolean>(true);
+
+	console.log(subscribeId);
+	console.log(pushId);
 
 	const onShowSubscribe = () => {
 		setShowSubscribe(true);
@@ -66,6 +71,7 @@ function App() {
 				});
 				toast.success("Push success");
 			} catch (e) {
+				console.log(e);
 				toast.error("Error in console");
 			} finally {
 				setLoadingPush(false);
@@ -89,10 +95,11 @@ function App() {
 		// 		setSubscribeId(result.visitorId);
 		// 		setPushId(result.visitorId);
 		// 	});
-
-		const id = uuid();
-		setSubscribeId(id);
-		setPushId(id);
+		if (subscribeId === "" || pushId === "") {
+			const id = uuid();
+			setSubscribeId(id);
+			setPushId(id);
+		}
 	}, []);
 
 	return (

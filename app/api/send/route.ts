@@ -24,12 +24,6 @@ import Subscription from "@/models/subscription.model";
 
 connect();
 
-webPush.setVapidDetails(
-	"mailto:hey@example.com",
-	process.env.PUBLIC_KEY!,
-	process.env.PRIVATE_KEY!
-);
-
 export async function POST(request: NextRequest) {
 	try {
 		const { message, title, id } = await request.json();
@@ -43,23 +37,43 @@ export async function POST(request: NextRequest) {
 			});
 		}
 
+		webPush.setVapidDetails(
+			"mailto:hey@example.com",
+			process.env.PUBLIC_KEY!,
+			process.env.PRIVATE_KEY!
+		);
+
 		const payload = JSON.stringify({ title, message });
 
-		webPush
-			.sendNotification(subscription, payload)
-			.catch((error) => {
-				return NextResponse.json({ data: { success: false } });
-			})
-			.then((value) => {
-				return NextResponse.json({ data: { success: true } });
-			})
-			.finally(() => NextResponse.json({ data: { success: true } }));
+		const sendNotif = await webPush.sendNotification(subscription, payload);
+
+		console.log({ sendNotif });
+		// webPush
+		// 	.sendNotification(subscription, payload)
+		// 	.catch((error) => {
+		// 		console.log(error);
+		// 		return NextResponse.json({
+		// 			data: { success: false, error: error.message },
+		// 		});
+		// 	})
+		// 	.then((value) => {
+		// 		return NextResponse.json({
+		// 			data: { success: true, message: "Notification sent successfully" },
+		// 		});
+		// 	})
+		// 	.finally(() =>
+		// 		NextResponse.json({
+		// 			data: { success: true, message: "Notification sent successfully" },
+		// 		})
+		// 	);
 
 		return NextResponse.json({
-			message: "Notif sent successfully",
-			status: "Success",
+			data: { success: true, message: "Notification sent successfully" },
 		});
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error);
+		return NextResponse.json({
+			data: { success: false, error: error.message },
+		});
 	}
 }

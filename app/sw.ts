@@ -18,6 +18,7 @@ self.addEventListener("push", function (event) {
 			icon: "icons/icon-72x72.png",
 			vibrate: [100, 50, 100],
 		};
+		console.log("event called");
 		event.waitUntil(self.registration.showNotification(data.title, options));
 	}
 });
